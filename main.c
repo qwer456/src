@@ -68,6 +68,7 @@ int main(void)
   */
 
   /* TODO - Add your application code here */
+  //1 uloha:
   RCC_AHBPeriphClockCmd(RCC_AHBPeriph_GPIOA, ENABLE);
   GPIOA->MODER |= (uint32_t) 0b01<<(5*2);
   //GPIOA->OTYPER
@@ -76,10 +77,69 @@ int main(void)
   GPIOA->BSRRL = 0b1<<5; //zapnutie led
   GPIOA->BSRRH = 0b1<<5; //vypnutie led
 
+  //2 uloha:
+  RCC_AHBPeriphClockCmd(RCC_AHBPeriph_GPIOC, ENABLE);
+  GPIOC->MODER |= (uint32_t) 0b00<<(13*2);
+  GPIOC->PUPDR |= (uint32_t) 0b00<<(13*2);
+
+
+  /*
+   * #Define S1 0
+   * #Define S2 1
+   * #Define S3 2
+   *
+   * unit8_t cState=0;
+   * unit8_t in;
+   * unit8_t it;
+   *
+   * in = idr& 1 << 13
+   * switch(cState){
+   * case S0: if(in){
+   * 		cState  = S1;
+   * 		it = 0;
+   * 		}
+   * 		break;
+   * case S1:
+   * }
+   */
+
+
+  uint8_t in;
+ // in = GPIOC->IDR&(1 << 13);
+
+
+
+
   /* Infinite loop */
   while (1)
   {
 	i++;
+
+	//3 uloha 2 cast
+
+	in = !(GPIOC->IDR&= (uint16_t)(1 << 13));
+	  if (in) {
+		  GPIOA->BSRRL = 0b1<<5; //zapnutie led
+	}
+	  else{
+		  GPIOA->BSRRH = 0b1<<5; //vypnutie led
+	  }
+
+	//3 uloha, 1 cast - pustat vo while
+/*
+	GPIOA->BSRRL = 0b1<<5; //zapnutie led
+	int var = 0;
+	for (var = 0; var < 10000; ++var) {
+			i++;
+		}
+	GPIOA->BSRRH = 0b1<<5; //vypnutie led
+
+	for (var = 0; var < 50000; ++var) {
+			  i= i + 5*2 - 3*2;
+
+		}
+*/
+
   }
   return 0;
 }
