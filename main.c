@@ -252,7 +252,7 @@ int main(void)
 	  else{
 		  GPIOA->BSRRH = 0b1<<5; //vypnutie led
 	  }
-
+*/
 
 	//kniznica
 	  in = !GPIO_ReadInputDataBit(GPIOC, GPIO_Pin_13);
@@ -267,11 +267,8 @@ int main(void)
 		  	        prem = 0;
 	  }
 	//3 uloha, 1 cast - pustat vo while
-/*
 
-		 */
-		//3 uloha, 1 cast - pustat vo while
-		/*
+
 
 	GPIOA->BSRRL = 0b1<<5; //zapnutie led
 	int var = 0;
