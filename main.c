@@ -95,25 +95,7 @@ int main(void)
   GPIOInit.GPIO_PuPd = GPIO_PuPd_NOPULL;
 
   GPIO_Init(GPIOC, &GPIOInit);
-  /*
-   * #Define S1 0
-   * #Define S2 1
-   * #Define S3 2
-   *
-   * unit8_t cState=0;
-   * unit8_t in;
-   * unit8_t it;
-   *
-   * in = idr& 1 << 13
-   * switch(cState){
-   * case S0: if(in){
-   * 		cState  = S1;
-   * 		it = 0;
-   * 		}
-   * 		break;
-   * case S1:
-   * }
-   */
+
 
 
   uint8_t in, prem;
@@ -131,71 +113,11 @@ int main(void)
 
 	int i = 0;
 
-	/**
-	 *  IMPORTANT NOTE!
-	 *  See the <system_*.c> file and how/if the SystemInit() function updates
-	 *  SCB->VTOR register. Sometimes the symbol VECT_TAB_SRAM needs to be defined
-	 *  when building the project if code has been located to RAM and interrupts
-	 *  are used. Otherwise the interrupt table located in flash will be used.
-	 *  E.g.  SCB->VTOR = 0x20000000;
-	 */
 
-	/**
-	 *  At this stage the microcontroller clock setting is already configured,
-	 *  this is done through SystemInit() function which is called from startup
-	 *  file (startup_stm32l1xx_hd.s) before to branch to application main.
-	 *  To reconfigure the default setting of SystemInit() function, refer to
-	 *  system_stm32l1xx.c file
-	 */
 
-	/* TODO - Add your application code here */
-	//1 uloha:
-	RCC_AHBPeriphClockCmd(RCC_AHBPeriph_GPIOA, ENABLE);
-	GPIOA->MODER |= (uint32_t) 0b01<<(5*2);
-	//GPIOA->OTYPER
-	GPIOA->PUPDR |= (uint32_t) 0b01<<(5*2);
-	GPIOA->OSPEEDR |= (uint32_t) 0b11<<(5*2);
-	GPIOA->BSRRL = 0b1<<5; //zapnutie led
-	GPIOA->BSRRH = 0b1<<5; //vypnutie led
-
-	//2 uloha:
-	RCC_AHBPeriphClockCmd(RCC_AHBPeriph_GPIOC, ENABLE);
-	GPIOC->MODER |= (uint32_t) 0b00<<(13*2);
-	GPIOC->PUPDR |= (uint32_t) 0b00<<(13*2);
-
-	/*
-#define ST0 0;
-#define ST1 1;
-#define ST2 2;
-
-	 */
 	uint8_t cState=0;
 	uint8_t in;
 	uint8_t it;
-	in = !(GPIOC->IDR&= (uint16_t)(1 << 13));
-
-	switch(cState){
-	case 0 :
-		if(in){
-			cState  = 1;
-			it = 0;
-		}
-		break;
-	case 1:
-		if(in){
-			it++;
-			if(it>=5){
-				cState = 2;
-			}
-
-		}
-		else{
-			cState = 0;
-		}
-		break;
-	}
-
-
 
 
 
