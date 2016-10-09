@@ -77,12 +77,28 @@ int main(void)
   GPIOA->BSRRL = 0b1<<5; //zapnutie led
   GPIOA->BSRRH = 0b1<<5; //vypnutie led
 
+  //kniznica
+  GPIO_InitTypeDef GPIOInit;
+  GPIOInit.GPIO_Pin = GPIO_Pin_5;
+  GPIOInit.GPIO_Mode = GPIO_Mode_OUT;
+  GPIOInit.GPIO_OType = GPIO_OType_PP;
+  GPIOInit.GPIO_PuPd = GPIO_PuPd_UP;
+  GPIOInit.GPIO_Speed = GPIO_Speed_40MHz;
+
+  GPIO_Init(GPIOA, &GPIOInit);
+
   //2 uloha:
   RCC_AHBPeriphClockCmd(RCC_AHBPeriph_GPIOC, ENABLE);
   GPIOC->MODER |= (uint32_t) 0b00<<(13*2);
   GPIOC->PUPDR |= (uint32_t) 0b00<<(13*2);
 
+  //kniznica
+  GPIOInit.GPIO_Pin = GPIO_Pin_13;
+  GPIOInit.GPIO_Mode = GPIO_Mode_IN;
+  GPIOInit.GPIO_OType = GPIO_OType_PP;
+  GPIOInit.GPIO_PuPd = GPIO_PuPd_NOPULL;
 
+  GPIO_Init(GPIOC, &GPIOInit);
   /*
    * #Define S1 0
    * #Define S2 1
@@ -104,7 +120,7 @@ int main(void)
    */
 
 
-  uint8_t in;
+  uint8_t in, prem;
  // in = GPIOC->IDR&(1 << 13);
 
 
@@ -125,6 +141,18 @@ int main(void)
 		  GPIOA->BSRRH = 0b1<<5; //vypnutie led
 	  }
 
+	//kniznica
+	  in = !GPIO_ReadInputDataBit(GPIOC, GPIO_Pin_13);
+
+	  if(in == 1 && prem == 0){
+		  for(i=0;i<0xFFF;i++);
+		  	  		prem = 1;
+	  }
+	  else if(in == 0 && prem == 1){
+		  GPIO_ToggleBits(GPIOA, GPIO_Pin_5);
+		  for(i=0;i<0xFFF;i++);
+		  	        prem = 0;
+	  }
 	//3 uloha, 1 cast - pustat vo while
 /*
 	GPIOA->BSRRL = 0b1<<5; //zapnutie led
